@@ -41,19 +41,19 @@ p.s. I am available for Freelance hire (UI design, web development). mail: mille
     border: #ff7235 solid 2px;
 
 } */
+
 #player{
+    transition: ease all .1s;
     aspect-ratio: 16 / 9;
     width: 100%;
-    max-width: 1500px; /* change this to a fixed width, or create a container with a width. */
-    /* height: 50%; */
-    /* height: calc(10vh + 30vw); */
-    /* width: calc(100% - 30vw); */
-    border-radius: 5px;
-    border: #ff35f5 solid 2px;
-
+    height: 100%;
+    /* max-height: calc(108dvh - 600px); */
+    max-width: calc(100% - 50vw);
+    min-width: 540px;
+    /* min-height: 400px; */
+    border-radius: 10px;
+    border: #ff7235 solid 2px;
 }
-/* @media (max-height: 1220px) {
-} */
 
 .preloader svg {
     position: fixed;
@@ -61,7 +61,6 @@ p.s. I am available for Freelance hire (UI design, web development). mail: mille
     left: 50%;
     margin-left: -20px;
     margin-top: -20px;
-    animation: preloader .5s linear;
 }
 
 @keyframes preloader {
