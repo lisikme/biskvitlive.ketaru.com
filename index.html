@@ -26,6 +26,7 @@
     <!--<link rel="stylesheet" href="css/primary-color/orange.css">-->
     <!-- orange -->
     <link rel="stylesheet" href="css/primary-color/coral.css"> <!-- coral -->
+    <link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet">
     <!-- Overlay color -->
     <!--<link rel="stylesheet" href="css/overlay-color/violet.css">-->
     <!-- violet -->
@@ -35,6 +36,24 @@
         @import url('https://fonts.googleapis.com/css2?family=Onest:wght@100..900&display=swap');
         *{
             font-family: "Onest", sans-serif;
+        }
+        .em{
+            font-size: 25px;
+            position: relative;
+            /* bottom: 2px; */
+            /* margin-right: 10px; */
+        }
+        .em-vk{
+            background-image:url("./icon/vk.png")
+        }
+        .em-ok{
+            background-image:url("./icon/ok.png")
+        }
+        .button_vd{
+            padding: 160px !important;
+            position: relative;
+            border-radius: 50%;
+            margin: 0;
         }
     </style>
 
@@ -88,14 +107,14 @@
                     </style>
                     <!-- Logo end -->
                     <!-- Page navigation -->
-                   <ul class="navigation">
+                <ul class="navigation">
                         <!-- Navigation link -->
                         <li><a class="default-link smooth-scroll" href="https://discord.gg/5BM4XD3qxM">Discord</a></li>
                         <!-- Navigation link -->
                         <!-- <li><a class="default-link smooth-scroll" href="https://my.hnm.su/?page=start_minecraft">Начать игру</a></li> -->
                         <!-- Navigation link -->
                         <li><a class="default-link smooth-scroll" href="https://live.ketaru.com"><span class="color">Radio KetaRu</span></a></li>
-                       <!-- Navigation link -->
+                    <!-- Navigation link -->
                         <!-- <li><a class="default-link smooth-scroll" href="#anchor-1">Фотографии</a></li> -->
                         <!-- Navigation link -->
                         <!-- <li><a class="default-link smooth-scroll" href="https://wiki.hnm.su">Правила</a></li> -->
@@ -113,7 +132,43 @@
                 <div class="container header-content">
                     <div class="main-title text-center">
                         <!-- Main-title -->
-                        <h2 class="bold a-f mb-20"><span class="color">Онлайн Радиостанция<br></h2>
+                        <button id="bvd" onclick="setURL('https://vk.com/video_ext.php?oid=486247008&id=456240962&autoplay=1')"><i class="em em-vk" aria-label=""></i></button>
+                        <button id="bvd" onclick="setURL('https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1')"><i class="em em-ok" aria-label=""></i></button>
+                        <br>
+                        <script>
+                            function setURL(url){
+                                document.getElementById('player').src = url;
+                            }
+                        </script>
+                        <style>
+                            .em-vk{
+                                background-image:url("./icon/vk.png")
+                            }
+                            .em-ok{
+                                background-image:url("./icon/ok.png")
+                            }
+                            .em{
+                                font-size: 20px;
+                                position: relative;
+                            }
+                            #bvd{
+                                padding: 0px 15px;
+                                position: relative;
+                                border-radius: 5px;
+                                background: #5050a1;
+                                border: 0;
+                                margin-bottom: 7px;
+                                transition: all 0.2s;
+                            }
+                            #bvd:hover{
+                                padding: 0px 15px;
+                                position: relative;
+                                border-radius: 5px;
+                                background: #6c6cc9;
+                                border: 0;
+                                margin-bottom: 7px;
+                            }
+                            </style>
                         <iframe id="player" src="https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1" frameBorder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                         <div class="main-title-buttons a-f">
                             <!-- Button -->
