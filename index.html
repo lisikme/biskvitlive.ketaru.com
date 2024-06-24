@@ -37,24 +37,6 @@
         *{
             font-family: "Onest", sans-serif;
         }
-        .em{
-            font-size: 25px;
-            position: relative;
-            /* bottom: 2px; */
-            /* margin-right: 10px; */
-        }
-        .em-vk{
-            background-image:url("./icon/vk.png")
-        }
-        .em-ok{
-            background-image:url("./icon/ok.png")
-        }
-        .button_vd{
-            padding: 160px !important;
-            position: relative;
-            border-radius: 50%;
-            margin: 0;
-        }
     </style>
 
     <!-- Favicon  -->
@@ -130,10 +112,44 @@
                 <div id="particles-js"></div>
                 <!-- header background end -->
                 <div class="container header-content">
+                    <style>
+                        .em{
+                            font-size: 25px;
+                            position: relative;
+                            /* bottom: 2px; */
+                            /* margin-right: 10px; */
+                        }
+                        .em-vk{
+                            background-image:url("./icon/vk.png")
+                        }
+                        .em-ok{
+                            background-image:url("./icon/ok.png")
+                        }
+                        .em-trovo{
+                            background-image:url("./icon/trovo.png");
+                            transform: scale(0.8);
+                        }
+                        .em-kick{
+                            background-image:url("./icon/kick.png");
+                            transform: scale(1.4);
+                        }
+                        .button_vd{
+                            padding: 160px !important;
+                            position: relative;
+                            border-radius: 50%;
+                            margin: 0;
+                        }
+                    </style>
                     <div class="main-title text-center">
                         <!-- Main-title -->
-                        <button id="bvd" onclick="setURL('https://vk.com/video_ext.php?oid=486247008&id=456240962&autoplay=1')"><i class="em em-vk" aria-label=""></i></button>
-                        <button id="bvd" onclick="setURL('https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1')"><i class="em em-ok" aria-label=""></i></button>
+                        <button id="bvd" onclick="setURL('https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1')">
+                            <i class="em em-ok" aria-label=""></i></button>
+                        <button id="bvd" onclick="setURL('https://vk.com/video_ext.php?oid=486247008&id=456240962&autoplay=1')">
+                            <i class="em em-vk" aria-label=""></i></button>
+                        <button id="bvd" onclick="setURL('https://player.trovo.live/embed/player?streamername=lisikme&muted=0&autoplay=1&hidefollow=1&hidesub=1')">
+                            <i class="em em-trovo" aria-label=""></i></button>
+                        <button id="bvd" onclick="setURL('https://player.kick.com/biskvitlive?autoplay=true?muted=false')">
+                            <i class="em em-kick" aria-label=""></i></button>
                         <br>
                         <script>
                             function setURL(url){
@@ -169,7 +185,7 @@
                                 margin-bottom: 7px;
                             }
                             </style>
-                        <iframe id="player" src="https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1" frameBorder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                        <iframe id="player" scrolling="no" src="https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1" frameBorder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                         <div class="main-title-buttons a-f">
                             <!-- Button -->
                             <!-- <a href="https://my.hnm.su/?page=register" class="button smooth-scroll">Личный кабинет <i class="fas fa-chevron-right"></i></a> -->
