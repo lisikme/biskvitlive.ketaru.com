@@ -43,6 +43,7 @@ p.s. I am available for Freelance hire (UI design, web development). mail: mille
 } */
 
 #player{
+    z-index: 1;
     /* transition: ease all .1s;
     aspect-ratio: 16 / 9;
     width: 100%;
@@ -59,7 +60,7 @@ p.s. I am available for Freelance hire (UI design, web development). mail: mille
     min-height: 220px;
     max-height: 70vh;
     background: #000000;
-    border-radius: 5px;
+    border-radius: 5px 5px 0px 0px;
     animation: image 1s infinite;
 }
 

@@ -112,68 +112,121 @@
                 <div id="particles-js"></div>
                 <!-- header background end -->
                 <div class="container header-content">
-                    <style>
-                        .em{
-                            font-size: 25px;
-                            position: relative;
-                            /* bottom: 2px; */
-                            /* margin-right: 10px; */
-                        }
-                        .em-vk{
-                            background-image:url("./icon/vk.png")
-                        }
-                        .em-ok{
-                            background-image:url("./icon/ok.png")
-                        }
-                        .button_vd{
-                            padding: 160px !important;
-                            position: relative;
-                            border-radius: 50%;
-                            margin: 0;
-                        }
-                    </style>
                     <div class="main-title text-center">
                         <!-- Main-title -->
-                        <button id="bvd" onclick="setURL('https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1')">
-                            <i class="em em-ok" aria-label=""></i></button>
-                        <button id="bvd" onclick="setURL('https://vk.com/video_ext.php?oid=486247008&id=456240962&autoplay=1')">
-                            <i class="em em-vk" aria-label=""></i></button>
-                        <br>
                         <script>
-                            function setURL(url){
+                            function setURL(name, url){
                                 document.getElementById('player').src = url;
+                                document.getElementById('rt').innerHTML = name;
+                                // console.log(name)
                             }
+
                         </script>
                         <style>
-                            .em-vk{
-                                background-image:url("./icon/vk.png")
+                            #textbt{
+                                margin-left: auto;
+                                margin-right: auto;
+                                left: 0;
+                                right: 0;
+                                text-align: center;
+                                position: absolute;
+                                top: 0px;
+                                background: #fd7135;
                             }
-                            .em-ok{
-                                background-image:url("./icon/ok.png")
+                            #bbox{
+                                overflow: hidden;
+                                position: relative;
+                                /* background: #000; */
+                                border-top: #00000000 2px solid;
+                                border-radius: 0px;
+                                top: -33px;
+                                /* background: #5050a1; */
+                                height: 80px !important;
+                                width: 520px !important;
+                                margin: 0 auto;
                             }
                             .em{
-                                font-size: 20px;
+                                font-size: 25px;
                                 position: relative;
+                                /* bottom: 2px; */
+                                /* margin-right: 10px; */
+                            }
+                            .button_vd{
+                                padding: 160px !important;
+                                position: relative;
+                                border-radius: 50%;
+                                margin: 0;
+                            }
+                            .em-vk{
+                                background-image:url("./icon/vk.png");
+                                top: 10px;
+                            }
+                            .em-ok{
+                                background-image:url("./icon/ok.png");
+                                top: 10px;
+                            }
+                            .em-plat{
+                                top: 10px;
+                                font-size: 20px;
+                                border-radius: 3px;
+                                background-image:url("./icon/plat.png")
                             }
                             #bvd{
-                                padding: 0px 15px;
+                                border-top-left-radius: 0 !important;
+                                border-top-right-radius: 0 !important;
+                                /* padding: 0px 15px; */
+                                padding-top: 5px;
+                                overflow: hidden;
                                 position: relative;
+                                top: -24px;
                                 border-radius: 5px;
                                 background: #5050a1;
+                                background: #5050a170;
                                 border: 0;
                                 margin-bottom: 7px;
                                 transition: all 0.2s;
+                                /* height: 40px; */
+                                height: 70px;
+                                width: 140px;
                             }
                             #bvd:hover{
-                                padding: 0px 15px;
+                                top: 0px;
+                                /* padding: 0px 15px; */
                                 position: relative;
                                 border-radius: 5px;
-                                background: #6c6cc9;
+                                background: #ff723560;
                                 border: 0;
-                                margin-bottom: 7px;
+                                /* margin-bottom: 7px; */
+                            }
+                            #rt{
+                                /* background: #fd7135; */
+                                background: #15151f;
+                                /* border: #fd7135 2px solid; */
+                                padding: 3px 0;
+                                border-top: none;
+                                top: -7px;
+                                left: 20px;
+                                width: calc(100% - 40px);
+                                border-radius: 0px 0px 3px 3px;
+                                position: relative;
+                                color: #fd7135;
+                            }
+                            #rt::before{
+                                content: 'Трансляция: ';
+                                color: #fff;
                             }
                             </style>
                         <iframe id="player" scrolling="no" src="https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1" frameBorder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                        <div id="rt">Однокласники</div><br>
+                        <div id="bbox">
+                            <button id="bvd" class="trr" onclick="setURL('Однокласники', 'https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1')">
+                                <i class="em em-ok" aria-label=""></i><br><span id="textbt">Однокласники</span></button>
+                            <button id="bvd" onclick="setURL('Вконтакте', 'https://vk.com/video_ext.php?oid=486247008&id=456240962&autoplay=1')">
+                                <i class="em em-vk" aria-label=""></i><br><span id="textbt">Вконтакте</span></button>
+                            <button id="bvd" onclick="setURL('Платформа', 'https://plvideo.ru/embed/WkPsr5fUkeqX')">
+                                <i class="em em-plat" aria-label=""></i><br><span id="textbt">Платформа</span></button>
+                            </div>
+                        <br>
                         <div class="main-title-buttons a-f">
                             <!-- Button -->
                             <!-- <a href="https://my.hnm.su/?page=register" class="button smooth-scroll">Личный кабинет <i class="fas fa-chevron-right"></i></a> -->
