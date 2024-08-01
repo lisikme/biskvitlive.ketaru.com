@@ -123,6 +123,27 @@
 
                         </script>
                         <style>
+                            #player{
+                                z-index: 1;
+                                /* transition: ease all .1s;
+                                aspect-ratio: 16 / 9;
+                                width: 100%;
+                                height: 100%;
+                                max-width: calc(100% - 50vw);
+                                min-width: 540px;
+                                border-radius: 0px 0px 5px 5px;
+                                */
+                                border: #ff7235 solid 2px; 
+                                position: relative;
+                                width: 100%;
+                                height: 40vw;
+                                max-width: calc(100% - 40px);
+                                min-height: 220px;
+                                max-height: 70vh;
+                                background: #000000;
+                                border-radius: 5px 5px 0px 0px;
+                                animation: image 1s infinite;
+                            }
                             #textbt{
                                 margin-left: auto;
                                 margin-right: auto;
@@ -202,18 +223,47 @@
                                 /* background: #fd7135; */
                                 background: #15151f;
                                 /* border: #fd7135 2px solid; */
-                                padding: 3px 0;
+                                padding: 5px 0;
                                 border-top: none;
                                 top: -7px;
                                 left: 20px;
                                 width: calc(100% - 40px);
-                                border-radius: 0px 0px 3px 3px;
+                                border-radius: 0px 0px 5px 5px;
                                 position: relative;
                                 color: #fd7135;
                             }
                             #rt::before{
                                 content: 'Трансляция: ';
                                 color: #fff;
+                            }
+                            #tags{
+                                color: #ffffff;
+                                background: #ffffff25;
+                                padding: 2px 10px;
+                                font-size: 12px;
+                                opacity: 1 !important;
+                                border-radius: 3px;
+                            }
+                            .footer-link a{
+                                color: #ff7235;
+                            }
+                            #boxe1, #boxe2{
+                                border-radius: 10px;
+                                background: rgba(255, 255, 255, 0.03);
+                                border: rgba(255, 255, 255, 0.05) solid 1px;
+                                padding: 10px 10px 5px 10px;
+                            }
+                            #boxe1{
+                                margin-bottom: 15px;
+                            }
+                            #err{
+                                margin-bottom: 10px;
+                            }
+                            .col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+                                position: relative;
+                                width: 100%;
+                                padding-right: 40px;
+                                padding-left: 40px
                             }
                             </style>
                         <iframe id="player" scrolling="no" src="https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1" frameBorder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
@@ -292,9 +342,9 @@
                             <!-- Footer text -->
                             <!-- <p class="light opas mb-30">123</p> -->
                             <!-- Phone -->
-                            <p class="cont light mb-10"><i class="color fas fa-envelope"></i>support@ketaru.com</p>
+                            <p class="cont light mb-10"><i class="color fas fa-envelope"></i>Тех-Поддержка: <a href="mailto:support@ketaru.com">support@ketaru.com</a></p>
                             <!-- Adres -->
-                            <p class="cont light"><i class="color fas fa-map-marker-alt"></i>live.ketaru.com | Appication for Discord</p>
+                            <p class="cont light"><i class="color fas fa-map-marker-alt"></i>Сайт проетка: live.ketaru.com</p>
                         </div>
                         <!-- <div class="col-12 col-md-6 col-lg-2 mb-30"> -->
                             <!-- Title -->
@@ -319,14 +369,19 @@
                             <!-- <h5 class="up bold mb-30">Кабинет</h5> -->
                             <!-- Footer list 2 -->
                             <!-- <ul> -->
-                                💖 Наши партнёры
-                                <li class="footer-link mb-10"><a href="https://akisearch.com/">AkiSearth</a></li>
-                                <li class="footer-link mb-10"><a href="https://discord.gg/QRXjDMawKg">Inferno House</a></li>
-                                <li class="footer-link mb-10"><a href="https://discord.gg/QRXjDMawKg">Radio PlusVibe</a></li>
-                                ✨ Наши проекты
-                                <li class="footer-link mb-10"><a href="https://live.ketaru.com">Radio KetaRu</a></li>
-                                <li class="footer-link mb-10"><a href="https://discord.com/oauth2/authorize?client_id=487246091939479553&scope=bot&scope=applications.commands%20bot&permissions=8">Shavermik</a></li>
-                                <li class="footer-link mb-10"><a href="https://discord.com/oauth2/authorize?client_id=897818365836550144&scope=bot&scope=applications.commands%20bot&permissions=8">Biskvit Music</a></li>
+                                <div id="boxe1">
+                                    💖 Наши партнёры<hr id="err">
+                                    <li class="footer-link mb-10"><a href="https://akisearch.com/">AkiSearth <span id="tags">Мониторинг ботов Discord</span></a></li>
+                                    <li class="footer-link mb-10"><a href="https://discord.gg/QRXjDMawKg">Inferno House <span id="tags">Discord сервер</span></a></li>
+                                    <li class="footer-link mb-10"><a href="https://discord.gg/QRXjDMawKg">Radio PlusVibe <span id="tags">Интернет радио</span></a></li>
+                                    <li class="footer-link mb-10"><a href="https://discord.gg/QRXjDMawKg">Voicy <span id="tags">Радио бот Disocrd</span></a></li>
+                                </div>
+                                <div id="boxe2">
+                                    ✨ Наши проекты в Discord<hr id="err">
+                                    <li class="footer-link mb-10"><a href="https://live.ketaru.com">Radio KetaRu <span id="tags">Радио бот Discord</span></a></li>
+                                    <li class="footer-link mb-10"><a href="https://discord.com/oauth2/authorize?client_id=487246091939479553&scope=bot&scope=applications.commands%20bot&permissions=8">Shavermik <span id="tags">Унивесальный бот</span></a></li>
+                                    <li class="footer-link mb-10"><a href="https://discord.com/oauth2/authorize?client_id=897818365836550144&scope=bot&scope=applications.commands%20bot&permissions=8">Biskvit Music <span id="tags">Музыкальный бот</span></a></li>
+                                </div>
                                 <!-- Footer list item
                                 <li class="footer-link mb-10"><a href="https://my.hnm.su/?page=sales">Рынок</a></li>
                                 Footer list item
