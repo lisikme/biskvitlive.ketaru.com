@@ -240,7 +240,7 @@ button:focus {
     display: flex;
     justify-content: center;
     height: 30px;
-    width: 50px;
+    width: 120px;
     text-align: center;
     list-style-type: none;
     -webkit-transition: .3s;
