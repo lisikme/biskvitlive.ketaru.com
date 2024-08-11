@@ -152,6 +152,8 @@
                                 text-align: center;
                                 position: absolute;
                                 top: 0px;
+                                font-size: 13px;
+                                font-weight: 600;
                                 background: #fd7135;
                             }
                             #bbox{
@@ -163,11 +165,11 @@
                                 top: -33px;
                                 /* background: #5050a1; */
                                 height: 80px !important;
-                                width: 520px !important;
+                                width: 100% !important;
                                 margin: 0 auto;
                             }
                             .em{
-                                font-size: 25px;
+                                font-size: 20px;
                                 position: relative;
                                 /* bottom: 2px; */
                                 /* margin-right: 10px; */
@@ -186,20 +188,26 @@
                                 background-image:url("./icon/ok.png");
                                 top: 10px;
                             }
+                            .em-nuum{
+                                top: 10px;
+                                font-size: 16px;
+                                border-radius: 2px;
+                                background-image:url("./icon/nuum.png")
+                            }
                             .em-plat{
                                 top: 10px;
-                                font-size: 20px;
-                                border-radius: 3px;
+                                font-size: 16px;
+                                border-radius: 2px;
                                 background-image:url("./icon/plat.png")
                             }
                             #bvd{
                                 border-top-left-radius: 0 !important;
                                 border-top-right-radius: 0 !important;
                                 /* padding: 0px 15px; */
-                                padding-top: 5px;
+                                padding-top: 0px;
                                 overflow: hidden;
                                 position: relative;
-                                top: -24px;
+                                top: -20px;
                                 border-radius: 5px;
                                 background: #5050a1;
                                 background: #5050a170;
@@ -207,8 +215,8 @@
                                 margin-bottom: 7px;
                                 transition: all 0.2s;
                                 /* height: 40px; */
-                                height: 70px;
-                                width: 140px;
+                                height: 60px;
+                                width: 110px;
                             }
                             #bvd:hover{
                                 top: 0px;
@@ -227,6 +235,7 @@
                                 border-top: none;
                                 top: -7px;
                                 left: 20px;
+                                font-weight: 600;
                                 width: calc(100% - 40px);
                                 border-radius: 0px 0px 5px 5px;
                                 position: relative;
@@ -273,7 +282,9 @@
                                 <i class="em em-ok" aria-label=""></i><br><span id="textbt">Однокласники</span></button>
                             <button id="bvd" onclick="setURL('Вконтакте', 'https://vk.com/video_ext.php?oid=486247008&id=456240962&autoplay=1')">
                                 <i class="em em-vk" aria-label=""></i><br><span id="textbt">Вконтакте</span></button>
-                            <button id="bvd" onclick="setURL('Платформа', 'https://plvideo.ru/embed/WrtRbguzDJwa')">
+                            <button id="bvd" onclick="setURL('Nuum', 'https://nuum.ru/embed/record/3078050')">
+                                <i class="em em-nuum" aria-label=""></i><br><span id="textbt">Nuum</span></button>
+                            <button id="bvd" onclick="setURL('Платформа', 'https://plvideo.ru/embed/xu6wZ8BUWLe4')">
                                 <i class="em em-plat" aria-label=""></i><br><span id="textbt">Платформа</span></button>
                             </div>
                         <br>
