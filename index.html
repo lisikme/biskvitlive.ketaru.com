@@ -133,7 +133,7 @@
                                 min-width: 540px;
                                 border-radius: 0px 0px 5px 5px;
                                 */
-                                border: #ff7235 solid 2px; 
+                                border: #ff7235 solid 1px; 
                                 position: relative;
                                 width: 100%;
                                 height: 40vw;
@@ -152,7 +152,7 @@
                                 text-align: center;
                                 position: absolute;
                                 top: 0px;
-                                font-size: 13px;
+                                font-size: 12px;
                                 font-weight: 600;
                                 background: #fd7135;
                             }
@@ -200,6 +200,12 @@
                                 border-radius: 2px;
                                 background-image:url("./icon/plat.png")
                             }
+                            .em-vkplay{
+                                top: 10px;
+                                font-size: 16px;
+                                border-radius: 2px;
+                                background-image:url("./icon/vkplay.png")
+                            }
                             #bvd{
                                 border-top-left-radius: 0 !important;
                                 border-top-right-radius: 0 !important;
@@ -215,8 +221,8 @@
                                 margin-bottom: 7px;
                                 transition: all 0.2s;
                                 /* height: 40px; */
-                                height: 60px;
-                                width: 110px;
+                                height: 50px;
+                                width: 80px;
                             }
                             #bvd:hover{
                                 top: 0px;
@@ -278,13 +284,15 @@
                         <iframe id="player" scrolling="no" src="https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1" frameBorder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                         <div id="rt">Однокласники</div><br>
                         <div id="bbox">
-                            <button id="bvd" class="trr" onclick="setURL('Однокласники', 'https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1')">
-                                <i class="em em-ok" aria-label=""></i><br><span id="textbt">Однокласники</span></button>
+                            <button id="bvd" class="trr" onclick="setURL('ОK', 'https://ok.ru/videoembed/7395904003657?nochat=1&autoplay=1')">
+                                <i class="em em-ok" aria-label=""></i><br><span id="textbt">ОK</span></button>
                             <button id="bvd" onclick="setURL('Вконтакте', 'https://vk.com/video_ext.php?oid=486247008&id=456240962&autoplay=1')">
                                 <i class="em em-vk" aria-label=""></i><br><span id="textbt">Вконтакте</span></button>
+                            <button id="bvd" onclick="setURL('VK Play', 'https://live.vkplay.ru/app/embed/lisikme')">
+                                <i class="em em-vkplay" aria-label=""></i><br><span id="textbt">VK Play</span></button>
                             <button id="bvd" onclick="setURL('GoodGame', 'https://goodgame.ru/player?209782')">
                                 <i class="em em-gg" aria-label=""></i><br><span id="textbt">GoodGame</span></button>
-                            <button id="bvd" onclick="setURL('Платформа', 'https://plvideo.ru/embed/d1d9Rfp8JUnG')">
+                            <button id="bvd" onclick="setURL('Платформа', 'https://plvideo.ru/embed/AivqFcSwO-um')">
                                 <i class="em em-plat" aria-label=""></i><br><span id="textbt">Платформа</span></button>
                             </div>
                         <br>
@@ -306,7 +314,7 @@
                 </div>
             </header>
             <!-- Header end -->
-          <!-- Games -->
+        <!-- Games -->
             <section id="portfolio" class="portfolio p-60-0-0 a-f">
                 <div class="container-fluid">
                     <!-- Grid -->
