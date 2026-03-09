@@ -17,6 +17,8 @@
             --text-secondary: rgba(255, 255, 255, 0.7);
             --accent-color: #5050a1;
             --gradient: linear-gradient(135deg, #ff7235 0%, #ffaa35 100%);
+            --gradient2: linear-gradient(135deg, #6773ff 0%, #8690ff 100%);
+            --gradient3: linear-gradient(135deg, #1C93E3 0%, #6cc4ff 100%);
         }
         * {
             margin: 0;
@@ -144,18 +146,39 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        .color2 {
+            background: var(--gradient2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .color3 {
+            background: var(--gradient3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
         .navigation {
             display: flex;
             list-style: none;
-            gap: 35px;
+            top: -2px;
+            position: relative;
+            gap: 5px;
         }
         .navigation a {
             color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             text-decoration: none;
             font-weight: 500;
+            /* border-radius: 5px; */
+            font-size: 12px;
             transition: all 0.3s ease;
             position: relative;
             padding: 2px 0;
+            padding: 4px 8px;
+            overflow: hidden;
+            border-radius: 3px;
         }
         .navigation a::after {
             content: '';
@@ -163,11 +186,16 @@
             bottom: 0;
             left: 0;
             width: 0;
-            height: 2px;
+            height: 100%;
             background: var(--gradient);
-            transition: width 0.3s ease;
+            transition: width 0.4s ease;
+            opacity: 0.1;
         }
         .navigation a:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0px 30px var(--primary-glow);
+            /* background: rgba(255, 255, 255, 0.2); */
+            /* border: 1px solid #FF8135; */
             color: var(--text-color);
         }
         .navigation a:hover::after {
@@ -500,7 +528,8 @@
                 </a>
             </div>
             <ul class="navigation">
-                <li><a href="https://discord.gg/5BM4XD3qxM" target="_blank">Discord</a></li>
+                <li><a href="https://discord.gg/5BM4XD3qxM" target="_blank"><span class="color2">Discord</span></a></li>
+                <li><a href="https://t.me/biskvitlive" target="_blank"><span class="color3">Telegram</span></a></li>
                 <li><a href="https://live.ketame.ru/downloads" ><span class="color">KetaMeFM</span></a></li>
             </ul>
         </div>
