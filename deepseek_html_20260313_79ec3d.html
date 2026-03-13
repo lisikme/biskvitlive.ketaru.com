@@ -1,0 +1,195 @@
+<div class="container platform-buttons">
+    <div id="status">Подключение к серверу...</div>
+    <div><span id="track"></span></div>
+    <div class="platfo" id="platfo">
+        <div class="pl">
+            <a class="platform-btn" id="vkm-bt" href="#" target="_blank">
+                <img src="./icon/muz-vk.png" id="icon-pl">
+                <span>VK<script></script></span>
+            </a>
+        </div>
+        <div class="pl">
+            <a class="platform-btn" id="ytm-bt" href="#" target="_blank">
+                <img src="./icon/muz-yt.png" id="icon-pl">
+                <span>YouTube</span>
+            </a>
+        </div>
+        <div class="pl">
+            <a class="platform-btn" id="yam-bt" href="#" target="_blank">
+                <img src="./icon/muz-ya.png" id="icon-pl">
+                <span>Яндекс</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Конфигурация Discord вебхука - ЗАМЕНИТЕ НА ВАШИ ДАННЫЕ
+    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1481085831128027207/JjIlK4utLFvyLbK7nKeq5QcBJHMaMimfCasHV5Nne-9r2KdP3LlIlvCVsXSkI6kBpu-e';
+    const MESSAGE_ID = '1481086583988949102';
+    
+    let lastTrackTitle = '';
+    let discordAvailable = false;
+
+    function prepareSearchQuery(query, service) {
+        if (!query) return '';
+        const encodedQuery = service === 'ytm' 
+            ? query.replace(/ /g, '+')
+            : encodeURIComponent(query);
+        return encodedQuery;
+    }
+
+    const plat_b = document.getElementById('platfo');
+    const vkm_b = document.getElementById('vkm-bt');
+    const ytm_b = document.getElementById('ytm-bt');
+    const yam_b = document.getElementById('yam-bt');
+    const trackDisplay = document.getElementById('track');
+    const statusDisplay = document.getElementById('status');
+
+    async function fetchTrackFromDiscord() {
+        try {
+            const response = await fetch(`${WEBHOOK_URL}/messages/${MESSAGE_ID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            // Получаем content из сообщения
+            const trackTitle = data.content || 'Без названия';
+            
+            // Проверяем, изменился ли трек
+            if (trackTitle !== lastTrackTitle) {
+                console.log('Трек обновлен:', trackTitle);
+                lastTrackTitle = trackTitle;
+                
+                // Обновляем отображение
+                trackDisplay.textContent = trackTitle;
+                
+                // Обновляем ссылки для поиска
+                yam_b.href = `https://music.yandex.ru/search?text=${prepareSearchQuery(trackTitle, 'vkm')}`;
+                ytm_b.href = `https://youtube.com/search?q=${prepareSearchQuery(trackTitle, 'ytm')}`;
+                vkm_b.href = `https://vk.com/audios486247008?q=${prepareSearchQuery(trackTitle, 'yam')}`;
+            }
+            
+            // Показываем кнопки и статус
+            plat_b.style.display = 'flex';
+            yam_b.style.display = 'flex';
+            ytm_b.style.display = 'flex';
+            vkm_b.style.display = 'flex';
+            
+            statusDisplay.textContent = 'Подключено к Discord';
+            statusDisplay.style.color = '#4CAF50';
+            
+            discordAvailable = true;
+            return true;
+
+        } catch (error) {
+            console.error('Error fetching from Discord:', error);
+            
+            if (discordAvailable) {
+                // Если Discord был доступен, а теперь нет - пробуем радио
+                discordAvailable = false;
+                await tryRadioStreams();
+            }
+            return false;
+        }
+    }
+
+    async function tryRadioStreams() {
+        const radioUrls = [
+            'https://drh-connect.dline-media.com/ketaruweb',
+            'https://s0.radioheart.ru:8000/ketarubot',
+            'https://s0.radioheart.ru:8000/ketaruweb'
+        ];
+
+        for (const url of radioUrls) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                
+                const response = await fetch(url, {
+                    method: 'HEAD',
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                // При no-cors мы не можем проверить статус, но если запрос не упал - сервер отвечает
+                statusDisplay.textContent = 'Радиостанция доступна';
+                statusDisplay.style.color = '#4CAF50';
+                
+                // Если был старый трек, показываем что ожидаем новый
+                if (!lastTrackTitle) {
+                    trackDisplay.textContent = 'Ожидание трека...';
+                }
+                
+                return true;
+                
+            } catch (error) {
+                console.log(`Radio ${url} not available:`, error);
+            }
+        }
+        
+        // Если ни один радио поток не ответил
+        statusDisplay.textContent = 'Радиостанция недоступна';
+        statusDisplay.style.color = '#f44336';
+        
+        // Не скрываем кнопки, если есть трек
+        if (!lastTrackTitle) {
+            trackDisplay.textContent = '';
+            plat_b.style.display = 'none';
+            yam_b.style.display = 'none';
+            ytm_b.style.display = 'none';
+            vkm_b.style.display = 'none';
+        }
+        
+        return false;
+    }
+
+    // Основная функция обновления
+    async function updateTrack() {
+        const discordSuccess = await fetchTrackFromDiscord();
+        
+        // Если Discord недоступен, проверяем радио
+        if (!discordSuccess) {
+            await tryRadioStreams();
+        }
+    }
+
+    // Функция для запуска обновлений
+    function startUpdates() {
+        // Первое обновление сразу
+        updateTrack();
+        
+        // Обновляем каждые 5 секунд
+        setInterval(updateTrack, 5000);
+    }
+
+    // Запускаем при загрузке страницы
+    document.addEventListener('DOMContentLoaded', startUpdates);
+
+    // Добавляем визуальный индикатор обновления (опционально)
+    let timeoutId;
+    trackDisplay.addEventListener('DOMSubtreeModified', function() {
+        clearTimeout(timeoutId);
+        trackDisplay.style.opacity = '0.7';
+        timeoutId = setTimeout(() => {
+            trackDisplay.style.opacity = '1';
+        }, 200);
+    });
+</script>
+
+<style>
+    /* Плавное появление при обновлении трека */
+    #track {
+        transition: opacity 0.3s ease;
+    }
+</style>

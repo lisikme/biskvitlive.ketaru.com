@@ -541,10 +541,10 @@
                 <p>Смотрите стримы на разных платформах в одном месте</p>
             </div>
             <div class="video-container parallax-element">
-                <iframe id="player" src="https://goodgame.ru/player?209782" 
+                <iframe id="player" src="https://vk.com/video_ext.php?oid=486247008&id=456240962&autoplay=1" 
                 frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                 <div class="player-info">
-                    <div id="rt">GoodGame</div>
+                    <div id="rt">VK</div>
                 </div>
             </div>
             <!-- <div class="platform-buttons">
@@ -649,7 +649,210 @@
                 top: 0px;
             }
         </style>
-        <div class="container platform-buttons">
+
+
+
+
+<div class="container platform-buttons">
+    <div id="status">Подключение к серверу...</div>
+    <div><span id="track"></span></div>
+    <div class="platfo" id="platfo">
+        <div class="pl">
+            <a class="platform-btn" id="vkm-bt" href="#" target="_blank">
+                <img src="./icon/muz-vk.png" id="icon-pl">
+                <span>VK<script></script></span>
+            </a>
+        </div>
+        <div class="pl">
+            <a class="platform-btn" id="ytm-bt" href="#" target="_blank">
+                <img src="./icon/muz-yt.png" id="icon-pl">
+                <span>YouTube</span>
+            </a>
+        </div>
+        <div class="pl">
+            <a class="platform-btn" id="yam-bt" href="#" target="_blank">
+                <img src="./icon/muz-ya.png" id="icon-pl">
+                <span>Яндекс</span>
+            </a>
+        </div>
+        <div class="pl">
+            <a class="platform-btn" id="spo-bt" href="#" target="_blank">
+                <img src="./icon/muz-spo.png" id="icon-pl" style="padding: 2px;">
+                <span>Spotify</span>
+            </a>
+        </div>
+    </div>
+</div>
+<script>
+    // Конфигурация Discord вебхука - ЗАМЕНИТЕ НА ВАШИ ДАННЫЕ
+    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1481085831128027207/JjIlK4utLFvyLbK7nKeq5QcBJHMaMimfCasHV5Nne-9r2KdP3LlIlvCVsXSkI6kBpu-e';
+    const MESSAGE_ID = '1481086583988949102';
+    
+    let lastTrackTitle = '';
+    let discordAvailable = false;
+
+    function prepareSearchQuery(query, service) {
+        if (!query) return '';
+        const encodedQuery = service === 'ytm' 
+            ? query.replace(/ /g, '+')
+            : encodeURIComponent(query);
+        return encodedQuery;
+    }
+
+    const plat_b = document.getElementById('platfo');
+    const vkm_b = document.getElementById('vkm-bt');
+    const ytm_b = document.getElementById('ytm-bt');
+    const yam_b = document.getElementById('yam-bt');
+    const spo_b = document.getElementById('spo-bt');
+    const trackDisplay = document.getElementById('track');
+    const statusDisplay = document.getElementById('status');
+
+    async function fetchTrackFromDiscord() {
+        try {
+            const response = await fetch(`${WEBHOOK_URL}/messages/${MESSAGE_ID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            // Получаем content из сообщения
+            const trackTitle = data.content || '';
+            
+            // Проверяем, изменился ли трек
+            if (trackTitle !== lastTrackTitle) {
+                console.log('Трек обновлен:', trackTitle);
+                lastTrackTitle = trackTitle;
+                
+                // Обновляем отображение
+                trackDisplay.textContent = trackTitle;
+                
+                // Обновляем ссылки для поиска
+                yam_b.href = `https://music.yandex.ru/search?text=${prepareSearchQuery(trackTitle, 'vkm')}`;
+                ytm_b.href = `https://youtube.com/search?q=${prepareSearchQuery(trackTitle, 'ytm')}`;
+                vkm_b.href = `https://vk.com/audios486247008?q=${prepareSearchQuery(trackTitle, 'yam')}`;
+                spo_b.href = `https://open.spotify.com/search/${prepareSearchQuery(trackTitle, 'spo')}`;
+            }
+            
+            // Показываем кнопки и статус
+            if (data.content){
+                plat_b.style.display = 'flex';
+                // yam_b.style.display = 'flex';
+                // ytm_b.style.display = 'flex';
+                // vkm_b.style.display = 'flex';
+            }
+            
+            statusDisplay.textContent = 'Подключено';
+            statusDisplay.style.color = '#4CAF50';
+            
+            discordAvailable = true;
+            return true;
+
+        } catch (error) {
+            console.error('Error fetching from Discord:', error);
+            
+            if (discordAvailable) {
+                // Если Discord был доступен, а теперь нет - пробуем радио
+                discordAvailable = false;
+                await tryRadioStreams();
+            }
+            return false;
+        }
+    }
+
+    async function tryRadioStreams() {
+        const radioUrls = [
+            'https://drh-connect.dline-media.com/ketaruweb',
+            'https://s0.radioheart.ru:8000/ketarubot',
+            'https://s0.radioheart.ru:8000/ketaruweb'
+        ];
+
+        for (const url of radioUrls) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                
+                const response = await fetch(url, {
+                    method: 'HEAD',
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                // При no-cors мы не можем проверить статус, но если запрос не упал - сервер отвечает
+                statusDisplay.textContent = 'Подключено';
+                statusDisplay.style.color = '#4CAF50';
+                
+                // Если был старый трек, показываем что ожидаем новый
+                if (!lastTrackTitle) {
+                    trackDisplay.textContent = 'Загрузка...';
+                }
+                
+                return true;
+                
+            } catch (error) {
+                console.log(`Radio ${url} not available:`, error);
+            }
+        }
+        
+        // Если ни один радио поток не ответил
+        statusDisplay.textContent = 'Не подключено';
+        statusDisplay.style.color = '#f44336';
+        
+        // Не скрываем кнопки, если есть трек
+        if (!lastTrackTitle) {
+            trackDisplay.textContent = '';
+            plat_b.style.display = 'none';
+            yam_b.style.display = 'none';
+            ytm_b.style.display = 'none';
+            vkm_b.style.display = 'none';
+        }
+        
+        return false;
+    }
+
+    // Основная функция обновления
+    async function updateTrack() {
+        const discordSuccess = await fetchTrackFromDiscord();
+        
+        // Если Discord недоступен, проверяем радио
+        if (!discordSuccess) {
+            await tryRadioStreams();
+        }
+    }
+
+    // Функция для запуска обновлений
+    function startUpdates() {
+        // Первое обновление сразу
+        updateTrack();
+        
+        // Обновляем каждые 5 секунд
+        setInterval(updateTrack, 5000);
+    }
+
+    // Запускаем при загрузке страницы
+    document.addEventListener('DOMContentLoaded', startUpdates);
+
+    // Добавляем визуальный индикатор обновления (опционально)
+    let timeoutId;
+    trackDisplay.addEventListener('DOMSubtreeModified', function() {
+        clearTimeout(timeoutId);
+        trackDisplay.style.opacity = '0.7';
+        timeoutId = setTimeout(() => {
+            trackDisplay.style.opacity = '1';
+        }, 200);
+    });
+</script>
+
+
+        <!-- <div class="container platform-buttons">
             <div id="status">Подключение к серверу...</div>
             <div><span id="track"></span></div>
             <div class="platfo" id="platfo">
@@ -674,145 +877,131 @@
             </div>
         </div>
         <script>
+            function replaceSpaces(text, label) {
+                return text.replace(/ /g, label !== 'YouTube' ? '%20' : '+');
+            }
 
-            
-        function replaceSpaces(text, label) {
-            return text.replace(/ /g, label !== 'YouTube' ? '%20' : '+');
-        }
+            // Или более универсальная версия для любого запроса:
+            function prepareSearchQuery(query, service) {
+                const encodedQuery = service === 'ytm' 
+                    ? query.replace(/ /g, '+')
+                    : encodeURIComponent(query); // Более правильный способ для URL
+                
+                return encodedQuery;
+            }
 
-        // Или более универсальная версия для любого запроса:
-        function prepareSearchQuery(query, service) {
-            const encodedQuery = service === 'ytm' 
-                ? query.replace(/ /g, '+')
-                : encodeURIComponent(query); // Более правильный способ для URL
-            
-            return encodedQuery;
-        }
-
-        const plat_b = document.getElementById('platfo');
-        const vkm_b = document.getElementById('vkm-bt');
-        const ytm_b = document.getElementById('ytm-bt');
-        const yam_b = document.getElementById('yam-bt');
-        const trackDisplay = document.getElementById('track');
-        const statusDisplay = document.getElementById('status');
-        let audioStreamReader = null;
-        let isStreaming = false;
-        const STREAM_URL = 'https://drh-connect.dline-media.com/ketaruweb';
-        initializeStream(STREAM_URL);
-        async function initializeStream(streamUrl) {
-            try {
-                const { parseIcyResponse } = await import('https://cdn.jsdelivr.net/npm/@music-metadata/icy@0.1.0/+esm');
-                const response = await fetch(streamUrl, {
-                    headers: { 'Icy-MetaData': '1' }
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const audioStream = parseIcyResponse(response, metadata => {
-                    for (const [key, value] of metadata.entries()) {
-                        console.log(`Rx ICY Metadata: ${key}: ${value}`);
+            const plat_b = document.getElementById('platfo');
+            const vkm_b = document.getElementById('vkm-bt');
+            const ytm_b = document.getElementById('ytm-bt');
+            const yam_b = document.getElementById('yam-bt');
+            const trackDisplay = document.getElementById('track');
+            const statusDisplay = document.getElementById('status');
+            let audioStreamReader = null;
+            let isStreaming = false;
+            const STREAM_URL = 'https://drh-connect.dline-media.com/ketaruweb';
+            initializeStream(STREAM_URL);
+            async function initializeStream(streamUrl) {
+                try {
+                    const { parseIcyResponse } = await import('https://cdn.jsdelivr.net/npm/@music-metadata/icy@0.1.0/+esm');
+                    const response = await fetch(streamUrl, {
+                        headers: { 'Icy-MetaData': '1' }
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    const title = metadata.get('StreamTitle');
-                    if (title) {
-                        trackDisplay.textContent = title;
-                        plat_b.style.display = `flex`;
-                        yam_b.href = `https://music.yandex.ru/search?text=${prepareSearchQuery(title, 'vkm')}`;
-                        yam_b.style.display = `flex`;
-                        ytm_b.href = `https://youtube.com/search?q=${prepareSearchQuery(title, 'ytm')}`;
-                        ytm_b.style.display = `flex`;
-                        vkm_b.href = `https://vk.com/audios486247008?q=${prepareSearchQuery(title, 'yam')}`;
-                        vkm_b.style.display = `flex`;
-                    }
-                });
-                audioStreamReader = audioStream.getReader();
-                isStreaming = true;
-                async function readStream() {
-                    while (isStreaming) {
-                        try {
-                            const {done} = await audioStreamReader.read();
-                            
-                            if (done) {
-                                console.log('Stream ended');
+                    const audioStream = parseIcyResponse(response, metadata => {
+                        for (const [key, value] of metadata.entries()) {
+                            console.log(`Rx ICY Metadata: ${key}: ${value}`);
+                        }
+                        const title = metadata.get('StreamTitle');
+                        if (title) {
+                            trackDisplay.textContent = title;
+                            plat_b.style.display = `flex`;
+                            yam_b.href = `https://music.yandex.ru/search?text=${prepareSearchQuery(title, 'vkm')}`;
+                            yam_b.style.display = `flex`;
+                            ytm_b.href = `https://youtube.com/search?q=${prepareSearchQuery(title, 'ytm')}`;
+                            ytm_b.style.display = `flex`;
+                            vkm_b.href = `https://vk.com/audios486247008?q=${prepareSearchQuery(title, 'yam')}`;
+                            vkm_b.style.display = `flex`;
+                        }
+                    });
+                    audioStreamReader = audioStream.getReader();
+                    isStreaming = true;
+                    async function readStream() {
+                        while (isStreaming) {
+                            try {
+                                const {done} = await audioStreamReader.read();
+                                
+                                if (done) {
+                                    console.log('Stream ended');
+                                    isStreaming = false;
+                                    setTimeout(() => {
+                                        console.log('Attempting to reconnect...');
+                                        stopCurrentStream();
+                                        initializeStream(streamUrl);
+                                    }, 5000);
+                                    
+                                    break;
+                                }
+                            } catch (error) {
+                                console.error('Error reading stream:', error);
                                 isStreaming = false;
+                                
+                                statusDisplay.textContent = `Ошибка: ${error.message}`;
+                                statusDisplay.style.color = '#f44336';
                                 setTimeout(() => {
-                                    console.log('Attempting to reconnect...');
+                                    console.log('Attempting to reconnect after error...');
                                     stopCurrentStream();
                                     initializeStream(streamUrl);
-                                }, 5000);
+                                }, 10000);
                                 
                                 break;
                             }
-                        } catch (error) {
-                            console.error('Error reading stream:', error);
-                            isStreaming = false;
-                            
-                            statusDisplay.textContent = `Ошибка: ${error.message}`;
-                            statusDisplay.style.color = '#f44336';
-                            setTimeout(() => {
-                                console.log('Attempting to reconnect after error...');
-                                stopCurrentStream();
-                                initializeStream(streamUrl);
-                            }, 10000);
-                            
-                            break;
                         }
                     }
+                    readStream();
+                    statusDisplay.textContent = 'Подключено';
+                    statusDisplay.style.color = '#4CAF50';
+                    
+                } catch (error) {
+                    console.error('Error initializing stream:', error);
+                    statusDisplay.textContent = `Ошибка получение данных: ${error.message}`;
+                    trackDisplay.textContent = '';
+                    platform_buttons_b.style.display = `none`;
+                    plat_b.style.display = `none`;
+                    yam_b.style.display = `none`;
+                    ytm_b.style.display = `none`;
+                    vkm_b.style.display = `none`;
+                    statusDisplay.style.color = '#f44336';
+                    setTimeout(() => {
+                        console.log('Attempting to reconnect after init error...');
+                        stopCurrentStream();
+                        initializeStream(streamUrl);
+                    }, 10000);
                 }
-                readStream();
-                statusDisplay.textContent = 'Подключено';
-                statusDisplay.style.color = '#4CAF50';
-                
-            } catch (error) {
-                console.error('Error initializing stream:', error);
-                statusDisplay.textContent = `Ошибка получение данных: ${error.message}`;
+            }
+            function stopCurrentStream() {
+                isStreaming = false;
+                if (audioStreamReader) {
+                    audioStreamReader.cancel().catch(() => {});
+                    audioStreamReader = null;
+                }
+                trackDisplay.textContent = 'Отключено';
                 trackDisplay.textContent = '';
-                platform_buttons_b.style.display = `none`;
                 plat_b.style.display = `none`;
                 yam_b.style.display = `none`;
                 ytm_b.style.display = `none`;
                 vkm_b.style.display = `none`;
-                statusDisplay.style.color = '#f44336';
-                setTimeout(() => {
-                    console.log('Attempting to reconnect after init error...');
-                    stopCurrentStream();
-                    initializeStream(streamUrl);
-                }, 10000);
             }
-        }
-        function stopCurrentStream() {
-            isStreaming = false;
-            if (audioStreamReader) {
-                audioStreamReader.cancel().catch(() => {});
-                audioStreamReader = null;
-            }
-            trackDisplay.textContent = 'Отключено';
-            trackDisplay.textContent = '';
-            plat_b.style.display = `none`;
-            yam_b.style.display = `none`;
-            ytm_b.style.display = `none`;
-            vkm_b.style.display = `none`;
-        }
-        </script>
+        </script> -->
         
 
 
             <div class="platform-buttons">
                 <div class="pl-video">
-                    <button class="platform-btn" onclick="setPlatform('GoodGame', 'https://goodgame.ru/player?209782')">
-                        <img src="./icon/gg.png" id="icon-pl">
-                        <span>GoodGame</span>
-                    </button>
-                </div>
-                <div class="pl-video">
                     <button class="platform-btn" onclick="setPlatform('VK', 'https://vk.com/video_ext.php?oid=486247008&id=456240962&autoplay=1')">
                         <img src="./icon/vk.png" id="icon-pl">
                         <span>VK</span>
-                    </button>
-                </div>
-                <div class="pl-video">
-                    <button class="platform-btn" onclick="setPlatform('VK Play', 'https://live.vkplay.ru/app/embed/lisikme')">
-                        <img src="./icon/vkplay.png" id="icon-pl">
-                        <span>VK Play</span>
                     </button>
                 </div>
                 <div class="pl-video">
@@ -822,11 +1011,23 @@
                     </button>
                 </div>
                 <div class="pl-video">
+                    <button class="platform-btn" onclick="setPlatform('GoodGame', 'https://goodgame.ru/player?209782')">
+                        <img src="./icon/gg.png" id="icon-pl">
+                        <span>GoodGame</span>
+                    </button>
+                </div>
+                <!-- <div class="pl-video">
+                    <button class="platform-btn" onclick="setPlatform('VK Play', 'https://live.vkplay.ru/app/embed/lisikme')">
+                        <img src="./icon/vkplay.png" id="icon-pl">
+                        <span>VK Play</span>
+                    </button>
+                </div> -->
+                <!-- <div class="pl-video">
                     <button class="platform-btn" onclick="setPlatform('Платформа', 'https://plvideo.ru/embed/lcjezPpMtotw')">
                         <img src="./icon/plat.png" id="icon-pl">
                         <span>Платформа</span>
                     </button>
-                </div>
+                </div> -->
                 <div class="pl-app">
                     <button class="platform-btn" onclick="setPlatform('KetaMeFM', 'https://lisikme.github.io/ketame-fm-webview/web/page3.html?id=1')">
                         <img src="./icon/kmfm.png" id="icon-pl">
