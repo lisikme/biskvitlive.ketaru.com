@@ -822,7 +822,7 @@
 
             async function fetchTrackFromDiscord() {
                 try {
-                    const response = await fetch(`proxy.sakuri.ru/api/proxy?url="${WEBHOOK_URL}/messages/${MESSAGE_ID}"`, {
+                    const response = await fetch(`https://proxy.sakuri.ru/api/proxy?url="${WEBHOOK_URL}/messages/${MESSAGE_ID}"`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
