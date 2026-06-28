@@ -1007,7 +1007,7 @@
             // Формируем название трека с исполнителем
             const trackTitle = data.title || '';
             const artist = data.artist || '';
-            const fullTrack = artist && trackTitle ? `${artist} - ${trackTitle}` : trackTitle || artist || '';
+            const fullTrack = artist && trackTitle ? `${trackTitle} - ${artist}` : trackTitle || artist || '';
             
             // Проверяем, изменился ли трек
             if (fullTrack !== lastTrackTitle) {
