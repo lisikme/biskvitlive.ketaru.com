@@ -795,7 +795,7 @@
                 font-weight: 500;
             }
         </style>
-
+<!-- 
         <script>
             // Конфигурация Discord вебхука - ЗАМЕНИТЕ НА ВАШИ ДАННЫЕ
             const WEBHOOK_URL = 'https://discord.com/api/webhooks/1481085831128027207/JjIlK4utLFvyLbK7nKeq5QcBJHMaMimfCasHV5Nne-9r2KdP3LlIlvCVsXSkI6kBpu-e';
@@ -962,7 +962,176 @@
                     trackDisplay.style.opacity = '1';
                 }, 200);
             });
-        </script>
+        </script> -->
+
+
+        <script>
+    // API URL для получения данных о треке
+    const API_URL = 'https://bisk-live-cdn.fascord.workers.dev/api/get-last';
+    
+    let lastTrackTitle = '';
+    let lastArtist = '';
+    let apiAvailable = false;
+
+    function prepareSearchQuery(query, service) {
+        if (!query) return '';
+        const encodedQuery = service === 'ytm' 
+            ? query.replace(/ /g, '+')
+            : encodeURIComponent(query);
+        return encodedQuery;
+    }
+
+    const plat_b = document.getElementById('platfo');
+    const vkm_b = document.getElementById('vkm-bt');
+    const ytm_b = document.getElementById('ytm-bt');
+    const yam_b = document.getElementById('yam-bt');
+    const spo_b = document.getElementById('spo-bt');
+    const trackDisplay = document.getElementById('track');
+    const statusDisplay = document.getElementById('status');
+
+    async function fetchTrackFromAPI() {
+        try {
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            // Формируем название трека с исполнителем
+            const trackTitle = data.title || '';
+            const artist = data.artist || '';
+            const fullTrack = artist && trackTitle ? `${artist} - ${trackTitle}` : trackTitle || artist || '';
+            
+            // Проверяем, изменился ли трек
+            if (fullTrack !== lastTrackTitle) {
+                console.log('Трек обновлен:', fullTrack);
+                lastTrackTitle = fullTrack;
+                lastArtist = artist;
+                
+                // Обновляем отображение
+                trackDisplay.textContent = fullTrack;
+                
+                // Обновляем ссылки для поиска из API
+                if (data.links) {
+                    yam_b.href = data.links.yandex || `https://music.yandex.ru/search?text=${prepareSearchQuery(fullTrack, 'vkm')}`;
+                    ytm_b.href = data.links.youtube || `https://youtube.com/search?q=${prepareSearchQuery(fullTrack, 'ytm')}`;
+                    vkm_b.href = data.links.vk || `https://vk.com/audios486247008?q=${prepareSearchQuery(fullTrack, 'yam')}`;
+                    spo_b.href = data.links.spotify || `https://open.spotify.com/search/${prepareSearchQuery(fullTrack, 'spo')}`;
+                } else {
+                    // Fallback ссылки
+                    yam_b.href = `https://music.yandex.ru/search?text=${prepareSearchQuery(fullTrack, 'vkm')}`;
+                    ytm_b.href = `https://youtube.com/search?q=${prepareSearchQuery(fullTrack, 'ytm')}`;
+                    vkm_b.href = `https://vk.com/audios486247008?q=${prepareSearchQuery(fullTrack, 'yam')}`;
+                    spo_b.href = `https://open.spotify.com/search/${prepareSearchQuery(fullTrack, 'spo')}`;
+                }
+            }
+            
+            // Показываем кнопки если есть трек
+            if (fullTrack) {
+                plat_b.style.display = 'flex';
+            }
+            
+            statusDisplay.textContent = 'Подключено';
+            statusDisplay.style.color = '#4CAF50';
+            
+            apiAvailable = true;
+            return true;
+
+        } catch (error) {
+            console.error('Error fetching from API:', error);
+            
+            statusDisplay.textContent = 'Ошибка подключения';
+            statusDisplay.style.color = '#f44336';
+            
+            apiAvailable = false;
+            return false;
+        }
+    }
+
+    async function tryRadioStreams() {
+        const radioUrls = [
+            'https://drh-connect.dline-media.com/ketaruweb',
+            'https://s0.radioheart.ru:8000/ketarubot',
+            'https://s0.radioheart.ru:8000/ketaruweb'
+        ];
+
+        for (const url of radioUrls) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                
+                const response = await fetch(url, {
+                    method: 'HEAD',
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                statusDisplay.textContent = 'Подключено (радио)';
+                statusDisplay.style.color = '#4CAF50';
+                
+                if (!lastTrackTitle) {
+                    trackDisplay.textContent = 'Ожидание трека...';
+                }
+                
+                return true;
+                
+            } catch (error) {
+                console.log(`Radio ${url} not available:`, error);
+            }
+        }
+        
+        statusDisplay.textContent = 'Не подключено';
+        statusDisplay.style.color = '#f44336';
+        
+        if (!lastTrackTitle) {
+            trackDisplay.textContent = '';
+            plat_b.style.display = 'none';
+        }
+        
+        return false;
+    }
+
+    // Основная функция обновления
+    async function updateTrack() {
+        const apiSuccess = await fetchTrackFromAPI();
+        
+        // Если API недоступен, пробуем радио
+        if (!apiSuccess) {
+            await tryRadioStreams();
+        }
+    }
+
+    // Функция для запуска обновлений
+    function startUpdates() {
+        // Первое обновление сразу
+        updateTrack();
+        
+        // Обновляем каждые 5 секунд
+        setInterval(updateTrack, 5000);
+    }
+
+    // Запускаем при загрузке страницы
+    document.addEventListener('DOMContentLoaded', startUpdates);
+
+    // Добавляем визуальный индикатор обновления
+    let timeoutId;
+    trackDisplay.addEventListener('DOMSubtreeModified', function() {
+        clearTimeout(timeoutId);
+        trackDisplay.style.opacity = '0.7';
+        timeoutId = setTimeout(() => {
+            trackDisplay.style.opacity = '1';
+        }, 200);
+    });
+</script>
         </div>
     </header>
     
